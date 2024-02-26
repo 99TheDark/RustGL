@@ -1,0 +1,2 @@
+# RustGL
+Learning [Rust](https://www.rust-lang.org/) while learning more complex techniques for shaders using [OpenGL](https://www.opengl.org/) with the [Glium](https://github.com/glium/glium) library.
