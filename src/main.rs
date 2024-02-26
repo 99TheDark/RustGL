@@ -1,7 +1,9 @@
+mod transformation;
 mod vertex;
 
 use glium::Surface;
 use std::fs;
+use transformation::translate;
 use vertex::Vertex;
 
 #[macro_use]
@@ -19,7 +21,7 @@ fn main() {
     let event_loop = winit::event_loop::EventLoopBuilder::new()
         .build()
         .expect("event loop building");
-    let (_window, display) = glium::backend::glutin::SimpleWindowBuilder::new()
+    let (window, display) = glium::backend::glutin::SimpleWindowBuilder::new()
         .with_inner_size(1600, 1000)
         .with_title("RustGL")
         .build(&event_loop);
@@ -50,25 +52,38 @@ fn main() {
         glium::Program::from_source(&display, vertex_shader_src, fragment_shader_src, None)
             .unwrap();
 
-    let mut target = display.draw();
-    target.clear_color(0.0, 0.0, 0.0, 1.0);
-    target
-        .draw(
-            &vertex_buffer,
-            &indices,
-            &program,
-            &glium::uniforms::EmptyUniforms,
-            &Default::default(),
-        )
-        .unwrap();
-    target.finish().unwrap();
-
+    let mut time = 0.0;
     let _ = event_loop.run(move |event, window_target| {
         match event {
             winit::event::Event::WindowEvent { event, .. } => match event {
                 winit::event::WindowEvent::CloseRequested => window_target.exit(),
                 _ => (),
             },
+            winit::event::Event::AboutToWait => {
+                // 60fps
+                time += 1.0 / 60.0;
+
+                let uniforms = uniform! {
+                    translationMatrix: translate(time, 0.2),
+                };
+
+                // Render
+                let mut screen = display.draw();
+                screen.clear_color(0.0, 0.0, 0.0, 1.0);
+                screen
+                    .draw(
+                        &vertex_buffer,
+                        &indices,
+                        &program,
+                        &uniforms,
+                        &Default::default(),
+                    )
+                    .unwrap();
+                screen.finish().unwrap();
+
+                // Loop
+                window.request_redraw();
+            }
             _ => (),
         };
     });
