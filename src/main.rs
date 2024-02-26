@@ -27,20 +27,19 @@ fn main() {
     // Create shape
     let vertex1 = Vertex {
         position: [-0.5, -0.5],
+        color: [1.0, 0.0, 0.0],
     };
     let vertex2 = Vertex {
         position: [0.0, 0.5],
+        color: [0.0, 1.0, 0.0],
     };
     let vertex3 = Vertex {
         position: [0.5, -0.25],
+        color: [0.0, 0.0, 1.0],
     };
     let shape = vec![vertex1, vertex2, vertex3];
 
     // Setup OpenGL
-    let mut frame = display.draw();
-    frame.clear_color(1.0, 1.0, 1.0, 1.0);
-    frame.finish().unwrap();
-
     let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
     let indices = glium::index::NoIndices(glium::index::PrimitiveType::TrianglesList);
 
@@ -52,7 +51,7 @@ fn main() {
             .unwrap();
 
     let mut target = display.draw();
-    target.clear_color(0.0, 0.0, 1.0, 1.0);
+    target.clear_color(0.0, 0.0, 0.0, 1.0);
     target
         .draw(
             &vertex_buffer,
