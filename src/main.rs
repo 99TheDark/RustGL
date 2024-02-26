@@ -1,17 +1,11 @@
-#[macro_use]
-extern crate glium;
+mod vertex;
 
 use glium::Surface;
 use std::fs;
 use vertex::Vertex;
 
-pub mod vertex {
-    #[derive(Copy, Clone)]
-    pub struct Vertex {
-        pub position: [f32; 2],
-    }
-    implement_vertex!(Vertex, position);
-}
+#[macro_use]
+extern crate glium;
 
 pub fn read_shader(path: &str) -> String {
     let shader_path = format!("{}{}", "shader/", path);
