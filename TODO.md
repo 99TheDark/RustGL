@@ -1,7 +1,7 @@
 # TODO
 - Keep aspect ratio
-- Use 3D coordinates
-    - Also 3D transformations
-- Camera
+- Perspective/orthographic camera
 - 1 texture per triangle
     - Make this more memory efficient by binding based on each triangle
+- 3D model loading
+    - Surface normals
