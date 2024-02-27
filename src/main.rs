@@ -25,20 +25,48 @@ fn main() {
         .with_title("RustGL")
         .build(&event_loop);
 
+    // Load image
+    let path = &include_bytes!("../textures/crate.png");
+    let image = image::load(std::io::Cursor::new(path), image::ImageFormat::Png)
+        .unwrap()
+        .to_rgba8();
+    let image_dims = image.dimensions();
+    let image = glium::texture::RawImage2d::from_raw_rgba_reversed(&image.into_raw(), image_dims);
+    let texture_array = glium::texture::Texture2d::new(&display, image).unwrap();
+    let texture = texture_array
+        .sampled()
+        .magnify_filter(glium::uniforms::MagnifySamplerFilter::Nearest)
+        .minify_filter(glium::uniforms::MinifySamplerFilter::Nearest); // Use nearest neighbor for crispy pixels
+
     // Create shape
-    let vertex1 = Vertex {
-        position: [-0.5, -0.5],
-        color: [1.0, 0.0, 0.0],
-    };
-    let vertex2 = Vertex {
-        position: [0.0, 0.5],
-        color: [0.0, 1.0, 0.0],
-    };
-    let vertex3 = Vertex {
-        position: [0.5, -0.25],
-        color: [0.0, 0.0, 1.0],
-    };
-    let shape = vec![vertex1, vertex2, vertex3];
+    let shape = vec![
+        // Triangle 1
+        Vertex {
+            position: [-0.5, -0.5],
+            tex_coords: [0.0, 0.0],
+        },
+        Vertex {
+            position: [0.5, -0.5],
+            tex_coords: [1.0, 0.0],
+        },
+        Vertex {
+            position: [-0.5, 0.5],
+            tex_coords: [0.0, 1.0],
+        },
+        // Triangle 2
+        Vertex {
+            position: [-0.5, 0.5],
+            tex_coords: [0.0, 1.0],
+        },
+        Vertex {
+            position: [0.5, -0.5],
+            tex_coords: [1.0, 0.0],
+        },
+        Vertex {
+            position: [0.5, 0.5],
+            tex_coords: [1.0, 1.0],
+        },
+    ];
 
     // Setup OpenGL
     let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
@@ -65,9 +93,12 @@ fn main() {
                 let scale_factor = 0.5 * f32::cos(time) + 1.0;
 
                 let uniforms = uniform! {
+                    // Transformations
                     translationMatrix: transformation::translate(0.3 * f32::sin(time), 0.0),
                     rotationMatrix: transformation::rotate(time),
                     scaleMatrix: transformation::scale(scale_factor, scale_factor + 0.1),
+                    // Texture
+                    surfaceTexture: texture,
                 };
 
                 // Render

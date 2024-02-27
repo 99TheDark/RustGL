@@ -1,9 +1,12 @@
 #version 410
 precision highp float;
 
-in vec3 fragColor;
+uniform sampler2D surfaceTexture;
+
+in vec2 pos;
+in vec2 uv;
 out vec4 color;
 
 void main() {
-    color = vec4(fragColor, 1.0);
+    color = texture(surfaceTexture, uv);
 }
