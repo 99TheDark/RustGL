@@ -94,10 +94,10 @@ fn main() {
 
                 let uniforms = uniform! {
                     // Transformations
-                    translationMatrix: transformation::translate(0.3 * f32::sin(time), 0.0, 0.0),
-                    xRotationMatrix: transformation::identity(),
-                    yRotationMatrix: transformation::rotate_pitch(time),
-                    zRotationMatrix: transformation::rotate_yaw(time * 0.3),
+                    translationMatrix: transformation::translate(0.3 * f32::sin(time), 0.0, -1.0),
+                    xRotationMatrix: transformation::rotate_roll(time * 0.1),
+                    yRotationMatrix: transformation::rotate_pitch(time * 0.6),
+                    zRotationMatrix: transformation::rotate_yaw(time),
                     scaleMatrix: transformation::scale(scale_factor, scale_factor + 0.1, 1.0),
                     // Texture
                     surfaceTexture: texture,
