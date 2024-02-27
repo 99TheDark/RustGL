@@ -3,7 +3,6 @@ mod vertex;
 
 use glium::Surface;
 use std::fs;
-use transformation::translate;
 use vertex::Vertex;
 
 #[macro_use]
@@ -63,8 +62,12 @@ fn main() {
                 // 60fps
                 time += 1.0 / 60.0;
 
+                let scale_factor = 0.5 * f32::cos(time) + 1.0;
+
                 let uniforms = uniform! {
-                    translationMatrix: translate(0.3 * f32::sin(time), 0.0),
+                    translationMatrix: transformation::translate(0.3 * f32::sin(time), 0.0),
+                    rotationMatrix: transformation::rotate(time),
+                    scaleMatrix: transformation::scale(scale_factor, scale_factor + 0.1),
                 };
 
                 // Render
