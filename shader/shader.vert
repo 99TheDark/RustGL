@@ -1,22 +1,26 @@
 #version 410
 precision highp float;
 
-uniform mat3 translationMatrix;
-uniform mat3 rotationMatrix;
-uniform mat3 scaleMatrix;
+uniform mat4 translationMatrix;
+uniform mat4 xRotationMatrix;
+uniform mat4 yRotationMatrix;
+uniform mat4 zRotationMatrix;
+uniform mat4 scaleMatrix;
 
 uniform sampler2D surfaceTexture;
 
-in vec2 position;
+in vec3 position;
 in vec2 tex_coords;
 
-out vec2 pos;
+out vec3 pos;
 out vec2 uv;
 
 void main() {
-    vec3 transformedPosition = translationMatrix * rotationMatrix * scaleMatrix * vec3(position, 1.0);
-    pos = transformedPosition.xy;
+    mat4 transformationMatrix = translationMatrix * xRotationMatrix * yRotationMatrix * zRotationMatrix * scaleMatrix;
+    
+    vec4 transformedPosition = transformationMatrix * vec4(position, 1.0);
+    pos = transformedPosition.xyz;
     uv = tex_coords;
 
-    gl_Position = vec4(transformedPosition.xy, 0.0, 1.0);
+    gl_Position = vec4(transformedPosition.xyz, 1.0);
 }
