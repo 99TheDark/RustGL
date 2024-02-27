@@ -64,7 +64,7 @@ fn main() {
                 time += 1.0 / 60.0;
 
                 let uniforms = uniform! {
-                    translationMatrix: translate(time, 0.2),
+                    translationMatrix: translate(0.3 * f32::sin(time), 0.0),
                 };
 
                 // Render

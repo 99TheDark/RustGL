@@ -9,5 +9,7 @@ out vec3 fragColor;
 
 void main() {
     fragColor = color;
-    gl_Position = vec4(translationMatrix * vec3(position, 1.0), 1.0);
+
+    vec3 transformedPosition = translationMatrix * vec3(position, 1.0);
+    gl_Position = vec4(transformedPosition.xy, 0.0, 1.0);
 }
