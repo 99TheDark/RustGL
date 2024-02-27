@@ -16,7 +16,6 @@ out vec3 pos;
 out vec2 uv;
 
 void main() {
-    // mat4 transformationMatrix = translationMatrix * xRotationMatrix * yRotationMatrix * zRotationMatrix * scaleMatrix;
     mat4 transformationMatrix = xRotationMatrix * zRotationMatrix * scaleMatrix * yRotationMatrix * translationMatrix;
     
     vec4 transformedPosition = transformationMatrix * vec4(position, 1.0);

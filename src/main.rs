@@ -1,3 +1,4 @@
+mod model;
 mod transformation;
 mod vertex;
 
@@ -43,34 +44,42 @@ fn main() {
         // Triangle 1
         Vertex {
             position: [-0.5, -0.5, 1.0],
+            normal: [0.0, 0.0, 0.0],
             tex_coords: [0.0, 0.0],
         },
         Vertex {
             position: [0.5, -0.5, 1.0],
+            normal: [0.0, 0.0, 0.0],
             tex_coords: [1.0, 0.0],
         },
         Vertex {
             position: [-0.5, 0.5, 1.0],
+            normal: [0.0, 0.0, 0.0],
             tex_coords: [0.0, 1.0],
         },
         // Triangle 2
         Vertex {
             position: [-0.5, 0.5, 1.0],
+            normal: [0.0, 0.0, 0.0],
             tex_coords: [0.0, 1.0],
         },
         Vertex {
             position: [0.5, -0.5, 1.0],
+            normal: [0.0, 0.0, 0.0],
             tex_coords: [1.0, 0.0],
         },
         Vertex {
             position: [0.5, 0.5, 1.0],
+            normal: [0.0, 0.0, 0.0],
             tex_coords: [1.0, 1.0],
         },
     ];
 
+    model::load_model("cube.obj");
+
     // Setup OpenGL
     let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
-    let indices = glium::index::NoIndices(glium::index::PrimitiveType::TrianglesList);
+    let index_buffer = glium::index::NoIndices(glium::index::PrimitiveType::TrianglesList);
 
     let vertex_shader_src = &read_shader("shader.vert");
     let fragment_shader_src = &read_shader("shader.frag");
@@ -109,7 +118,7 @@ fn main() {
                 screen
                     .draw(
                         &vertex_buffer,
-                        &indices,
+                        &index_buffer,
                         &program,
                         &uniforms,
                         &Default::default(),
