@@ -7,7 +7,6 @@ pub fn translate(x: f32, y: f32, z: f32) -> [[f32; 4]; 4] {
     ]
 }
 
-#[allow(dead_code)]
 pub fn rotate_roll(theta: f32) -> [[f32; 4]; 4] {
     let (cos, sin) = (f32::cos(theta), f32::sin(theta));
 
@@ -50,6 +49,7 @@ pub fn scale(sx: f32, sy: f32, sz: f32) -> [[f32; 4]; 4] {
     ]
 }
 
+#[allow(dead_code)]
 pub fn identity() -> [[f32; 4]; 4] {
     [
         [1.0, 0.0, 0.0, 0.0],

@@ -8,5 +8,5 @@ in vec2 uv;
 out vec4 color;
 
 void main() {
-    color = texture(surfaceTexture, uv) + vec4(0.0, uv, 0.0);
+    color = texture(surfaceTexture, uv);
 }
