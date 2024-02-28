@@ -10,10 +10,11 @@ uniform mat4 scaleMatrix;
 uniform sampler2D surfaceTexture;
 
 in vec3 position;
-in vec3 normal;
+in vec3 surface_normal;
 in vec2 tex_coords;
 
 out vec3 pos;
+out vec3 normal;
 out vec2 uv;
 
 void main() {
@@ -21,6 +22,7 @@ void main() {
     
     vec4 transformedPosition = transformationMatrix * vec4(position, 1.0);
     pos = transformedPosition.xyz;
+    normal = surface_normal;
     uv = tex_coords;
 
     gl_Position = vec4(transformedPosition.xyz, 1.0);

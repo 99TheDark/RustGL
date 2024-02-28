@@ -23,7 +23,7 @@ fn main() {
         .build(&event_loop);
 
     // Load image
-    let path = &include_bytes!("../textures/crate.png");
+    let path = &include_bytes!("../object/textures/crate.png");
     let image = image::load(std::io::Cursor::new(path), image::ImageFormat::Png)
         .unwrap()
         .to_rgba8();
@@ -57,15 +57,13 @@ fn main() {
                 // 60fps
                 time += 1.0 / 60.0;
 
-                let scale_factor = 0.5 * f32::cos(time) + 1.0;
-
                 let uniforms = uniform! {
                     // Transformations
-                    translationMatrix: transformation::translate(0.3 * f32::sin(time), 0.0, -1.0),
-                    xRotationMatrix: transformation::rotate_roll(time * 0.1),
-                    yRotationMatrix: transformation::rotate_pitch(time * 0.6),
-                    zRotationMatrix: transformation::rotate_yaw(time),
-                    scaleMatrix: transformation::scale(scale_factor, scale_factor + 0.1, 1.0),
+                    translationMatrix: transformation::translate(0.0, -0.2, 0.3),
+                    xRotationMatrix: transformation::identity(),
+                    yRotationMatrix: transformation::rotate_pitch(time),
+                    zRotationMatrix: transformation::identity(),
+                    scaleMatrix: transformation::scale(0.2, 0.2, 0.2),
                     // Texture
                     surfaceTexture: texture,
                 };

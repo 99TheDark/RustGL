@@ -1,17 +1,17 @@
 use glium::{glutin::surface::WindowSurface, IndexBuffer, VertexBuffer};
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Vertex {
     position: [f32; 3],
     tex_coords: [f32; 2],
 }
 implement_vertex!(Vertex, position, tex_coords);
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Normal {
-    normal: [f32; 3],
+    surface_normal: [f32; 3],
 }
-implement_vertex!(Normal, normal);
+implement_vertex!(Normal, surface_normal);
 
 pub fn load_model(
     path: &str,
@@ -25,7 +25,6 @@ pub fn load_model(
     // Just going to use the first model, for loop is for later
     let model = models.get(0).unwrap();
     let mesh = &model.mesh;
-    println!("Parsing {}", model.name);
 
     if 2 * &mesh.indices.len() != &mesh.normal_indices.len() + &mesh.texcoord_indices.len() {
         panic!("Unequal indices");
@@ -42,8 +41,14 @@ pub fn load_model(
             position: vertex,
             tex_coords: uv,
         });
-        normals.push(Normal { normal: normal });
+        normals.push(Normal {
+            surface_normal: normal,
+        });
     }
+
+    println!("{:#?} {:#?}", vertices, &mesh.indices);
+    vertices.pop();
+    vertices.remove(3);
 
     let vertex_buffer = glium::VertexBuffer::new(display, &vertices);
     let normal_buffer = glium::VertexBuffer::new(display, &normals);
