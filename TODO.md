@@ -3,5 +3,5 @@
 - Perspective/orthographic camera
 - 1 texture per triangle
     - Make this more memory efficient by binding based on each triangle
-- Depth testing
 - Fix indices
+- Make rotation around translation point
