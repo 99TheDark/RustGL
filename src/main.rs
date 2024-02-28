@@ -57,15 +57,21 @@ fn main() {
                 // 60fps
                 time += 1.0 / 60.0;
 
+                // Aspect ratio
+                let size = window.inner_size();
+                let aspect = (size.width as f32) / (size.height as f32);
+
                 let uniforms = uniform! {
                     // Transformations
-                    translationMatrix: transformation::translate(0.0, -0.5, 0.5),
+                    translationMatrix: transformation::translate(0.0, -0.2, 0.5),
                     xRotationMatrix: transformation::rotate_roll(-0.4),
                     yRotationMatrix: transformation::rotate_pitch(time),
-                    zRotationMatrix: transformation::identity(),
-                    scaleMatrix: transformation::scale(0.2, 0.3, 0.2),
+                    zRotationMatrix: transformation::rotate_yaw(0.2),
+                    scaleMatrix: transformation::scale(0.4, 0.4, 0.4),
                     // Texture
                     surfaceTexture: texture,
+                    // Aspect ratio
+                    aspect: aspect,
                 };
 
                 let params = glium::DrawParameters {

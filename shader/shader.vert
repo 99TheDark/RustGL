@@ -6,6 +6,7 @@ uniform mat4 xRotationMatrix;
 uniform mat4 yRotationMatrix;
 uniform mat4 zRotationMatrix;
 uniform mat4 scaleMatrix;
+uniform float aspect;
 
 uniform sampler2D surfaceTexture;
 
@@ -18,11 +19,12 @@ out vec3 normal;
 out vec2 uv;
 
 void main() {
-    mat4 transformationMatrix = xRotationMatrix * zRotationMatrix * scaleMatrix * yRotationMatrix * translationMatrix;
+    mat4 transformationMatrix = 
+        translationMatrix * scaleMatrix * yRotationMatrix * xRotationMatrix * zRotationMatrix;
     
     pos = (transformationMatrix * vec4(position, 1.0)).xyz;
     normal = transpose(inverse(mat3(transformationMatrix))) * surface_normal;
     uv = tex_coords;
 
-    gl_Position = vec4(pos, 1.0);
+    gl_Position = vec4(pos.x, pos.y * aspect, pos.z, 1.0);
 }
