@@ -20,10 +20,9 @@ out vec2 uv;
 void main() {
     mat4 transformationMatrix = xRotationMatrix * zRotationMatrix * scaleMatrix * yRotationMatrix * translationMatrix;
     
-    vec4 transformedPosition = transformationMatrix * vec4(position, 1.0);
-    pos = transformedPosition.xyz;
-    normal = surface_normal;
+    pos = (transformationMatrix * vec4(position, 1.0)).xyz;
+    normal = transpose(inverse(mat3(transformationMatrix))) * surface_normal;
     uv = tex_coords;
 
-    gl_Position = vec4(transformedPosition.xyz, 1.0);
+    gl_Position = vec4(pos, 1.0);
 }

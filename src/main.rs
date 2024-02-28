@@ -59,13 +59,22 @@ fn main() {
 
                 let uniforms = uniform! {
                     // Transformations
-                    translationMatrix: transformation::translate(0.0, -0.2, 0.5),
-                    xRotationMatrix: transformation::rotate_roll(0.2),
+                    translationMatrix: transformation::translate(0.0, -0.5, 0.5),
+                    xRotationMatrix: transformation::rotate_roll(-0.4),
                     yRotationMatrix: transformation::rotate_pitch(time),
                     zRotationMatrix: transformation::identity(),
                     scaleMatrix: transformation::scale(0.2, 0.3, 0.2),
                     // Texture
                     surfaceTexture: texture,
+                };
+
+                let params = glium::DrawParameters {
+                    depth: glium::Depth {
+                        test: glium::draw_parameters::DepthTest::IfLess,
+                        write: true,
+                        ..Default::default()
+                    },
+                    ..Default::default()
                 };
 
                 // Render
@@ -77,7 +86,7 @@ fn main() {
                         &indices,
                         &program,
                         &uniforms,
-                        &Default::default(),
+                        &params,
                     )
                     .unwrap();
                 screen.finish().unwrap();
