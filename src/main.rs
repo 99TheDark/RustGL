@@ -60,7 +60,7 @@ fn main() {
                 let uniforms = uniform! {
                     // Transformations
                     translationMatrix: transformation::translate(0.0, -0.2, 0.5),
-                    xRotationMatrix: transformation::rotate_roll(time * 0.1),
+                    xRotationMatrix: transformation::rotate_roll(0.2),
                     yRotationMatrix: transformation::rotate_pitch(time),
                     zRotationMatrix: transformation::identity(),
                     scaleMatrix: transformation::scale(0.2, 0.3, 0.2),
