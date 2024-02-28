@@ -32,23 +32,26 @@ pub fn load_model(
 
     let mut vertices: Vec<Vertex> = vec![];
     let mut normals: Vec<Normal> = vec![];
+    let mut indices_used: Vec<u32> = vec![];
     for i in 0..mesh.indices.len() {
-        let vertex = batch3(&mesh.positions, mesh.indices[i] as usize);
+        let index = mesh.indices[i];
+
+        let vertex = batch3(&mesh.positions, index as usize);
         let normal = batch3(&mesh.normals, mesh.normal_indices[i] as usize);
         let uv = batch2(&mesh.texcoords, mesh.texcoord_indices[i] as usize);
 
-        vertices.push(Vertex {
-            position: vertex,
-            tex_coords: uv,
-        });
-        normals.push(Normal {
-            surface_normal: normal,
-        });
-    }
+        if !indices_used.contains(&index) {
+            vertices.push(Vertex {
+                position: vertex,
+                tex_coords: uv,
+            });
+            normals.push(Normal {
+                surface_normal: normal,
+            });
 
-    println!("{:#?} {:#?}", vertices, &mesh.indices);
-    vertices.pop();
-    vertices.remove(3);
+            indices_used.push(index);
+        }
+    }
 
     let vertex_buffer = glium::VertexBuffer::new(display, &vertices);
     let normal_buffer = glium::VertexBuffer::new(display, &normals);

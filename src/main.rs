@@ -59,18 +59,18 @@ fn main() {
 
                 let uniforms = uniform! {
                     // Transformations
-                    translationMatrix: transformation::translate(0.0, -0.2, 0.3),
-                    xRotationMatrix: transformation::identity(),
+                    translationMatrix: transformation::translate(0.0, -0.2, 0.5),
+                    xRotationMatrix: transformation::rotate_roll(time * 0.1),
                     yRotationMatrix: transformation::rotate_pitch(time),
                     zRotationMatrix: transformation::identity(),
-                    scaleMatrix: transformation::scale(0.2, 0.2, 0.2),
+                    scaleMatrix: transformation::scale(0.2, 0.3, 0.2),
                     // Texture
                     surfaceTexture: texture,
                 };
 
                 // Render
                 let mut screen = display.draw();
-                screen.clear_color(0.0, 0.0, 0.0, 1.0);
+                screen.clear_color_and_depth((0.0, 0.0, 0.0, 1.0), 1.0);
                 screen
                     .draw(
                         (&vertices, &normals),
