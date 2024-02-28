@@ -10,6 +10,7 @@ uniform mat4 scaleMatrix;
 uniform sampler2D surfaceTexture;
 
 in vec3 position;
+in vec3 normal;
 in vec2 tex_coords;
 
 out vec3 pos;

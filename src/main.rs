@@ -1,19 +1,15 @@
 mod model;
 mod transformation;
-mod vertex;
 
 use glium::Surface;
 use std::fs;
-use vertex::Vertex;
 
 #[macro_use]
 extern crate glium;
 
 pub fn read_shader(path: &str) -> String {
     let shader_path = format!("{}{}", "shader/", path);
-    let shader_content =
-        fs::read_to_string(shader_path).expect("Unexpected error reading shader file");
-    return shader_content;
+    fs::read_to_string(shader_path).expect("Unexpected error reading shader file")
 }
 
 // Going to start copying + pasting the tutorial, and then go through and understand and modify the code given
@@ -39,53 +35,15 @@ fn main() {
         .magnify_filter(glium::uniforms::MagnifySamplerFilter::Nearest)
         .minify_filter(glium::uniforms::MinifySamplerFilter::Nearest); // Use nearest neighbor for crispy pixels
 
-    // Create shape
-    let shape = vec![
-        // Triangle 1
-        Vertex {
-            position: [-0.5, -0.5, 1.0],
-            normal: [0.0, 0.0, 0.0],
-            tex_coords: [0.0, 0.0],
-        },
-        Vertex {
-            position: [0.5, -0.5, 1.0],
-            normal: [0.0, 0.0, 0.0],
-            tex_coords: [1.0, 0.0],
-        },
-        Vertex {
-            position: [-0.5, 0.5, 1.0],
-            normal: [0.0, 0.0, 0.0],
-            tex_coords: [0.0, 1.0],
-        },
-        // Triangle 2
-        Vertex {
-            position: [-0.5, 0.5, 1.0],
-            normal: [0.0, 0.0, 0.0],
-            tex_coords: [0.0, 1.0],
-        },
-        Vertex {
-            position: [0.5, -0.5, 1.0],
-            normal: [0.0, 0.0, 0.0],
-            tex_coords: [1.0, 0.0],
-        },
-        Vertex {
-            position: [0.5, 0.5, 1.0],
-            normal: [0.0, 0.0, 0.0],
-            tex_coords: [1.0, 1.0],
-        },
-    ];
-
-    model::load_model("cube.obj");
+    // Load model
+    let (vertices, normals, indices) = model::load_model("cube.obj", &display);
 
     // Setup OpenGL
-    let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
-    let index_buffer = glium::index::NoIndices(glium::index::PrimitiveType::TrianglesList);
-
-    let vertex_shader_src = &read_shader("shader.vert");
-    let fragment_shader_src = &read_shader("shader.frag");
+    let vertex_shader_source = &read_shader("shader.vert");
+    let fragment_shader_source = &read_shader("shader.frag");
 
     let program =
-        glium::Program::from_source(&display, vertex_shader_src, fragment_shader_src, None)
+        glium::Program::from_source(&display, vertex_shader_source, fragment_shader_source, None)
             .unwrap();
 
     let mut time = 0.0;
@@ -117,8 +75,8 @@ fn main() {
                 screen.clear_color(0.0, 0.0, 0.0, 1.0);
                 screen
                     .draw(
-                        &vertex_buffer,
-                        &index_buffer,
+                        (&vertices, &normals),
+                        &indices,
                         &program,
                         &uniforms,
                         &Default::default(),
