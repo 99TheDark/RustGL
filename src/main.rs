@@ -74,7 +74,7 @@ fn main() {
 
                 let mut model = Matrix4::identity();
                 model.scale(0.4, 0.4, 0.4);
-                model.translate(0.0, -0.2, 3.5);
+                model.translate(0.0, -0.5, 3.5);
                 model.rotate_x(-0.4);
                 model.rotate_y(time);
                 model.rotate_z(0.2);
@@ -82,7 +82,7 @@ fn main() {
                 let projection = Matrix4::perspective(size.width, size.height, 0.1, 1024.0);
 
                 let view =
-                    transformation::view(&[0.0, f32::sin(time) * 0.5, 0.0], &[0.0, 0.0, 1.0]);
+                    transformation::view(&[0.0, f32::sin(time) * 0.3, 0.0], &[0.0, 0.0, 1.0]);
 
                 let uniforms = uniform! {
                     modelMatrix: model.to_array(),
