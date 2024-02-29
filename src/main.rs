@@ -52,6 +52,7 @@ fn main() {
             write: true,
             ..Default::default()
         },
+        backface_culling: glium::draw_parameters::BackfaceCullingMode::CullClockwise,
         ..Default::default()
     };
 
@@ -72,7 +73,7 @@ fn main() {
 
                 let uniforms = uniform! {
                     // Transformations
-                    translationMatrix: transformation::translate(0.0, -0.2, 10.0),
+                    translationMatrix: transformation::translate(0.0, -0.2, 15.0),
                     xRotationMatrix: transformation::rotate_roll(-0.4),
                     yRotationMatrix: transformation::rotate_pitch(time),
                     zRotationMatrix: transformation::rotate_yaw(0.2),
