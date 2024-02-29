@@ -1,18 +1,80 @@
 use std::ops;
 
-pub struct Matrix4(pub [[f32; 4]; 4]);
+pub struct Matrix4([[f32; 4]; 4]);
 
 impl Matrix4 {
     pub fn to_array(&self) -> [[f32; 4]; 4] {
         self.0
     }
-    /*fn translate(&self, x: f32, y: f32, z: f32);
-    fn scale(&self, sx: f32, sy: f32, sz: f32);
-    fn rotate_x(&self, theta: f32);
-    fn rotate_y(&self, theta: f32);
-    fn rotate_z(&self, theta: f32);*/
-    /*fn identity() -> Matrix4;
-    fn new(matrix: [[f32; 4]; 4]) -> Matrix4;*/
+
+    pub fn copy(&self) -> Matrix4 {
+        Matrix4(self.0)
+    }
+
+    fn apply(&mut self, transformation: Matrix4) {
+        let prod = self.copy() * transformation;
+        *self = prod;
+    }
+
+    pub fn translate(&mut self, x: f32, y: f32, z: f32) {
+        self.apply(Matrix4([
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0],
+            [x, y, z, 1.0],
+        ]));
+    }
+
+    pub fn scale(&mut self, sx: f32, sy: f32, sz: f32) {
+        self.apply(Matrix4([
+            [sx, 0.0, 0.0, 0.0],
+            [0.0, sy, 0.0, 0.0],
+            [0.0, 0.0, sz, 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ]));
+    }
+
+    pub fn rotate_x(&mut self, theta: f32) {
+        let (cos, sin) = (f32::cos(theta), f32::sin(theta));
+
+        self.apply(Matrix4([
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, cos, sin, 0.0],
+            [0.0, -sin, cos, 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ]));
+    }
+
+    pub fn rotate_y(&mut self, theta: f32) {
+        let (cos, sin) = (f32::cos(theta), f32::sin(theta));
+
+        self.apply(Matrix4([
+            [cos, 0.0, -sin, 0.0],
+            [0.0, 1.0, 0.0, 0.0],
+            [sin, 0.0, cos, 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ]));
+    }
+
+    pub fn rotate_z(&mut self, theta: f32) {
+        let (cos, sin) = (f32::cos(theta), f32::sin(theta));
+
+        self.apply(Matrix4([
+            [cos, sin, 0.0, 0.0],
+            [-sin, cos, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ]));
+    }
+
+    pub fn identity() -> Matrix4 {
+        Matrix4([
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ])
+    }
 }
 
 impl ops::Mul<Matrix4> for Matrix4 {
@@ -47,62 +109,6 @@ impl ops::Mul<Matrix4> for Matrix4 {
             ],
         ])
     }
-}
-
-#[allow(dead_code)]
-pub fn translate(x: f32, y: f32, z: f32) -> [[f32; 4]; 4] {
-    [
-        [1.0, 0.0, 0.0, 0.0],
-        [0.0, 1.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0],
-        [x, y, z, 1.0],
-    ]
-}
-
-#[allow(dead_code)]
-pub fn rotate_roll(theta: f32) -> [[f32; 4]; 4] {
-    let (cos, sin) = (f32::cos(theta), f32::sin(theta));
-
-    [
-        [1.0, 0.0, 0.0, 0.0],
-        [0.0, cos, sin, 0.0],
-        [0.0, -sin, cos, 0.0],
-        [0.0, 0.0, 0.0, 1.0],
-    ]
-}
-
-#[allow(dead_code)]
-pub fn rotate_pitch(theta: f32) -> [[f32; 4]; 4] {
-    let (cos, sin) = (f32::cos(theta), f32::sin(theta));
-
-    [
-        [cos, 0.0, -sin, 0.0],
-        [0.0, 1.0, 0.0, 0.0],
-        [sin, 0.0, cos, 0.0],
-        [0.0, 0.0, 0.0, 1.0],
-    ]
-}
-
-#[allow(dead_code)]
-pub fn rotate_yaw(theta: f32) -> [[f32; 4]; 4] {
-    let (cos, sin) = (f32::cos(theta), f32::sin(theta));
-
-    [
-        [cos, sin, 0.0, 0.0],
-        [-sin, cos, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 0.0, 1.0],
-    ]
-}
-
-#[allow(dead_code)]
-pub fn scale(sx: f32, sy: f32, sz: f32) -> [[f32; 4]; 4] {
-    [
-        [sx, 0.0, 0.0, 0.0],
-        [0.0, sy, 0.0, 0.0],
-        [0.0, 0.0, sz, 0.0],
-        [0.0, 0.0, 0.0, 1.0],
-    ]
 }
 
 #[allow(dead_code)]
@@ -162,15 +168,5 @@ fn view(position: &[f32; 3], direction: &[f32; 3]) -> [[f32; 4]; 4] {
         [s_norm[1], u[1], f[1], 0.0],
         [s_norm[2], u[2], f[2], 0.0],
         [p[0], p[1], p[2], 1.0],
-    ]
-}
-
-#[allow(dead_code)]
-pub fn identity() -> [[f32; 4]; 4] {
-    [
-        [1.0, 0.0, 0.0, 0.0],
-        [0.0, 1.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 0.0, 1.0],
     ]
 }

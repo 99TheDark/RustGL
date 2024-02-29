@@ -1,12 +1,6 @@
 #version 410
 precision highp float;
 
-uniform mat4 translationMatrix;
-uniform mat4 xRotationMatrix;
-uniform mat4 yRotationMatrix;
-uniform mat4 zRotationMatrix;
-uniform mat4 scaleMatrix;
-
 uniform mat4 modelMatrix;
 uniform mat4 projectionMatrix;
 
