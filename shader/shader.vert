@@ -6,6 +6,9 @@ uniform mat4 xRotationMatrix;
 uniform mat4 yRotationMatrix;
 uniform mat4 zRotationMatrix;
 uniform mat4 scaleMatrix;
+
+uniform mat4 projectionMatrix;
+
 uniform float aspect;
 
 uniform sampler2D surfaceTexture;
@@ -22,9 +25,10 @@ void main() {
     mat4 transformationMatrix = 
         translationMatrix * scaleMatrix * yRotationMatrix * xRotationMatrix * zRotationMatrix;
     
-    pos = (transformationMatrix * vec4(position, 1.0)).xyz;
+    pos = (projectionMatrix * transformationMatrix * vec4(position, 1.0)).xyz;
     normal = transpose(inverse(mat3(transformationMatrix))) * surface_normal;
     uv = tex_coords;
 
-    gl_Position = vec4(pos.x, pos.y * aspect, pos.z, 1.0);
+    // divide by 1000 because of the 1x1x1 clipping cube
+    gl_Position = vec4(pos.x, pos.y, pos.z / 1000.0, 1.0);
 }

@@ -46,6 +46,15 @@ fn main() {
         glium::Program::from_source(&display, vertex_shader_source, fragment_shader_source, None)
             .unwrap();
 
+    let params = glium::DrawParameters {
+        depth: glium::Depth {
+            test: glium::draw_parameters::DepthTest::IfLess,
+            write: true,
+            ..Default::default()
+        },
+        ..Default::default()
+    };
+
     let mut time = 0.0;
     let _ = event_loop.run(move |event, window_target| {
         match event {
@@ -59,11 +68,11 @@ fn main() {
 
                 // Aspect ratio
                 let size = window.inner_size();
-                let aspect = (size.width as f32) / (size.height as f32);
+                let aspect = size.width as f32 / size.height as f32;
 
                 let uniforms = uniform! {
                     // Transformations
-                    translationMatrix: transformation::translate(0.0, -0.2, 0.5),
+                    translationMatrix: transformation::translate(0.0, -0.2, 10.0),
                     xRotationMatrix: transformation::rotate_roll(-0.4),
                     yRotationMatrix: transformation::rotate_pitch(time),
                     zRotationMatrix: transformation::rotate_yaw(0.2),
@@ -72,15 +81,8 @@ fn main() {
                     surfaceTexture: texture,
                     // Aspect ratio
                     aspect: aspect,
-                };
-
-                let params = glium::DrawParameters {
-                    depth: glium::Depth {
-                        test: glium::draw_parameters::DepthTest::IfLess,
-                        write: true,
-                        ..Default::default()
-                    },
-                    ..Default::default()
+                    // Perspective projection
+                    projectionMatrix: transformation::perspective(size.width, size.height, 0.001, 1000.0),
                 };
 
                 // Render

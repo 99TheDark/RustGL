@@ -55,6 +55,21 @@ pub fn scale(sx: f32, sy: f32, sz: f32) -> [[f32; 4]; 4] {
 }
 
 #[allow(dead_code)]
+pub fn perspective(width: u32, height: u32, near: f32, far: f32) -> [[f32; 4]; 4] {
+    let aspect = height as f32 / width as f32;
+
+    let fov: f32 = std::f32::consts::PI / 3.0;
+    let sf = 1.0 / (fov / 2.0).tan();
+
+    [
+        [sf * aspect, 0.0, 0.0, 0.0],
+        [0.0, sf, 0.0, 0.0],
+        [0.0, 0.0, (near + far) / (far - near), 1.0],
+        [0.0, 0.0, -(2.0 * near * far) / (far - near), 0.0],
+    ]
+}
+
+#[allow(dead_code)]
 pub fn identity() -> [[f32; 4]; 4] {
     [
         [1.0, 0.0, 0.0, 0.0],
