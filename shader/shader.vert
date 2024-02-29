@@ -29,6 +29,6 @@ void main() {
     normal = transpose(inverse(mat3(transformationMatrix))) * surface_normal;
     uv = tex_coords;
 
-    // divide by 1000 because of the 1x1x1 clipping cube
+    // Divide by 1000 because of the 1x1x1 clipping cube, eventually to be changed with model-view matrices
     gl_Position = vec4(pos.x, pos.y, pos.z / 1000.0, 1.0);
 }

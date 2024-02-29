@@ -83,7 +83,7 @@ fn main() {
                     // Aspect ratio
                     aspect: aspect,
                     // Perspective projection
-                    projectionMatrix: transformation::perspective(size.width, size.height, 0.001, 1000.0),
+                    projectionMatrix: transformation::perspective(size.width, size.height, 0.1, 1024.0),
                 };
 
                 // Render
