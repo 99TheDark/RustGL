@@ -53,7 +53,7 @@ fn main() {
             write: true,
             ..Default::default()
         },
-        backface_culling: glium::draw_parameters::BackfaceCullingMode::CullClockwise,
+        backface_culling: glium::draw_parameters::BackfaceCullingMode::CullCounterClockwise,
         ..Default::default()
     };
 
