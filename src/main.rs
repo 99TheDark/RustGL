@@ -3,6 +3,7 @@ mod transformation;
 
 use glium::Surface;
 use std::fs;
+use transformation::Matrix4;
 
 #[macro_use]
 extern crate glium;
@@ -71,16 +72,22 @@ fn main() {
                 let size = window.inner_size();
                 let aspect = size.width as f32 / size.height as f32;
 
-                let mut model = transformation::Matrix4::identity();
-                model.translate(0.0, -0.2, 15.0);
+                let mut model = Matrix4::identity();
+                model.scale(0.4, 0.4, 0.4);
+                model.translate(0.0, -0.2, 3.5);
                 model.rotate_x(-0.4);
                 model.rotate_y(time);
                 model.rotate_z(0.2);
-                model.scale(0.4, 0.4, 0.4);
+
+                let projection = Matrix4::perspective(size.width, size.height, 0.1, 1024.0);
+
+                let view =
+                    transformation::view(&[0.0, f32::sin(time) * 0.5, 0.0], &[0.0, 0.0, 1.0]);
 
                 let uniforms = uniform! {
                     modelMatrix: model.to_array(),
-                    projectionMatrix: transformation::perspective(size.width, size.height, 0.1, 1024.0),
+                    projectionMatrix: projection.to_array(),
+                    viewMatrix: view,
                     surfaceTexture: texture,
                     aspect: aspect,
                 };
