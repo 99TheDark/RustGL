@@ -3,7 +3,6 @@ mod transformation;
 
 use glium::Surface;
 use std::fs;
-use transformation::test_mul;
 
 #[macro_use]
 extern crate glium;
