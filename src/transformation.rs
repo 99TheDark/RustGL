@@ -1,3 +1,54 @@
+use std::ops;
+
+pub struct Matrix4(pub [[f32; 4]; 4]);
+
+impl Matrix4 {
+    pub fn to_array(&self) -> [[f32; 4]; 4] {
+        self.0
+    }
+    /*fn translate(&self, x: f32, y: f32, z: f32);
+    fn scale(&self, sx: f32, sy: f32, sz: f32);
+    fn rotate_x(&self, theta: f32);
+    fn rotate_y(&self, theta: f32);
+    fn rotate_z(&self, theta: f32);*/
+    /*fn identity() -> Matrix4;
+    fn new(matrix: [[f32; 4]; 4]) -> Matrix4;*/
+}
+
+impl ops::Mul<Matrix4> for Matrix4 {
+    type Output = Matrix4;
+
+    fn mul(self, rhs: Matrix4) -> Self::Output {
+        let (a, b) = (self.0, rhs.0);
+        Matrix4([
+            [
+                a[0][0] * b[0][0] + a[1][0] * b[0][1] + a[2][0] * b[0][2] + a[3][0] * b[0][3],
+                a[0][1] * b[0][0] + a[1][1] * b[0][1] + a[2][1] * b[0][2] + a[3][1] * b[0][3],
+                a[0][2] * b[0][0] + a[1][2] * b[0][1] + a[2][2] * b[0][2] + a[3][2] * b[0][3],
+                a[0][3] * b[0][0] + a[1][3] * b[0][1] + a[2][3] * b[0][2] + a[3][3] * b[0][3],
+            ],
+            [
+                a[0][0] * b[1][0] + a[1][0] * b[1][1] + a[2][0] * b[1][2] + a[3][0] * b[1][3],
+                a[0][1] * b[1][0] + a[1][1] * b[1][1] + a[2][1] * b[1][2] + a[3][1] * b[1][3],
+                a[0][2] * b[1][0] + a[1][2] * b[1][1] + a[2][2] * b[1][2] + a[3][2] * b[1][3],
+                a[0][3] * b[1][0] + a[1][3] * b[1][1] + a[2][3] * b[1][2] + a[3][3] * b[1][3],
+            ],
+            [
+                a[0][0] * b[2][0] + a[1][0] * b[2][1] + a[2][0] * b[2][2] + a[3][0] * b[2][3],
+                a[0][1] * b[2][0] + a[1][1] * b[2][1] + a[2][1] * b[2][2] + a[3][1] * b[2][3],
+                a[0][2] * b[2][0] + a[1][2] * b[2][1] + a[2][2] * b[2][2] + a[3][2] * b[2][3],
+                a[0][3] * b[2][0] + a[1][3] * b[2][1] + a[2][3] * b[2][2] + a[3][3] * b[2][3],
+            ],
+            [
+                a[0][0] * b[3][0] + a[1][0] * b[3][1] + a[2][0] * b[3][2] + a[3][0] * b[3][3],
+                a[0][1] * b[3][0] + a[1][1] * b[3][1] + a[2][1] * b[3][2] + a[3][1] * b[3][3],
+                a[0][2] * b[3][0] + a[1][2] * b[3][1] + a[2][2] * b[3][2] + a[3][2] * b[3][3],
+                a[0][3] * b[3][0] + a[1][3] * b[3][1] + a[2][3] * b[3][2] + a[3][3] * b[3][3],
+            ],
+        ])
+    }
+}
+
 #[allow(dead_code)]
 pub fn translate(x: f32, y: f32, z: f32) -> [[f32; 4]; 4] {
     [
@@ -70,12 +121,16 @@ pub fn perspective(width: u32, height: u32, near: f32, far: f32) -> [[f32; 4]; 4
 }
 
 #[allow(dead_code)]
-fn view(position: &[f32; 3], direction: &[f32; 3], up: &[f32; 3]) -> [[f32; 4]; 4] {
+fn view(position: &[f32; 3], direction: &[f32; 3]) -> [[f32; 4]; 4] {
+    let up = [0.0, 1.0, 0.0];
+
     let f = {
         let f = direction;
-        let len = f[0] * f[0] + f[1] * f[1] + f[2] * f[2];
-        let len = len.sqrt();
-        [f[0] / len, f[1] / len, f[2] / len]
+        let length = (direction[0] * direction[0]
+            + direction[1] * direction[1]
+            + direction[2] * direction[2])
+            .sqrt();
+        [f[0] / length, f[1] / length, f[2] / length]
     };
 
     let s = [

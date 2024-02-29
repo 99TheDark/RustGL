@@ -7,6 +7,7 @@ uniform mat4 yRotationMatrix;
 uniform mat4 zRotationMatrix;
 uniform mat4 scaleMatrix;
 
+uniform mat4 modelMatrix;
 uniform mat4 projectionMatrix;
 
 uniform float aspect;
@@ -22,11 +23,8 @@ out vec3 normal;
 out vec2 uv;
 
 void main() {
-    mat4 transformationMatrix = 
-        translationMatrix * scaleMatrix * yRotationMatrix * xRotationMatrix * zRotationMatrix;
-    
-    pos = (projectionMatrix * transformationMatrix * vec4(position, 1.0)).xyz;
-    normal = transpose(inverse(mat3(transformationMatrix))) * surface_normal;
+    pos = (projectionMatrix * modelMatrix * vec4(position, 1.0)).xyz;
+    normal = transpose(inverse(mat3(modelMatrix))) * surface_normal;
     uv = tex_coords;
 
     // Divide by 1000 because of the 1x1x1 clipping cube, eventually to be changed with model-view matrices
