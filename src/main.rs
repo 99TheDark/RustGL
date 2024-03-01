@@ -62,6 +62,42 @@ fn main() {
         match event {
             winit::event::Event::WindowEvent { event, .. } => match event {
                 winit::event::WindowEvent::CloseRequested => window_target.exit(),
+                winit::event::WindowEvent::MouseInput {
+                    device_id: _,
+                    state,
+                    button,
+                } => {
+                    if state == winit::event::ElementState::Pressed
+                        && button == winit::event::MouseButton::Left
+                    {
+                        window.set_cursor_visible(false);
+                        window
+                            .set_cursor_grab(winit::window::CursorGrabMode::Locked)
+                            .unwrap();
+                    }
+                }
+                winit::event::WindowEvent::KeyboardInput {
+                    device_id: _,
+                    event,
+                    ..
+                } => {
+                    if event.state == winit::event::ElementState::Pressed
+                        && event.physical_key == winit::keyboard::KeyCode::Escape
+                    {
+                        window.set_cursor_visible(true);
+                        window
+                            .set_cursor_grab(winit::window::CursorGrabMode::None)
+                            .unwrap();
+                    }
+                }
+                _ => (),
+            },
+            winit::event::Event::DeviceEvent { event, .. } => match event {
+                winit::event::DeviceEvent::MouseMotion { .. } => {
+                    /*f !mouse_visible {
+                        window.set_cursor_position(window.cu)
+                    }*/
+                }
                 _ => (),
             },
             winit::event::Event::AboutToWait => {
@@ -70,7 +106,6 @@ fn main() {
 
                 // Aspect ratio
                 let size = window.inner_size();
-                let aspect = size.width as f32 / size.height as f32;
 
                 let mut model = Matrix4::identity();
                 model.scale(0.4, 0.4, 0.4);
@@ -89,7 +124,6 @@ fn main() {
                     projectionMatrix: projection.to_array(),
                     viewMatrix: view,
                     surfaceTexture: texture,
-                    aspect: aspect,
                 };
 
                 // Render

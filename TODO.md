@@ -4,4 +4,4 @@
 - Fix indices
 - Camera controls
 - Movement controls
-- Hidden mouse
+- Fix aspect ratio on rescale

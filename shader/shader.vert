@@ -5,8 +5,6 @@ uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-uniform float aspect;
-
 uniform sampler2D surfaceTexture;
 
 in vec3 position;
