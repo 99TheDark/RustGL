@@ -1,6 +1,8 @@
+mod camera;
 mod model;
 mod transformation;
 
+use camera::Camera;
 use glium::Surface;
 use std::fs;
 use transformation::Matrix4;
@@ -58,6 +60,8 @@ fn main() {
     };
 
     let mut time = 0.0;
+    let mut camera = Camera::new();
+
     let _ = event_loop.run(move |event, window_target| {
         match event {
             winit::event::Event::WindowEvent { event, .. } => match event {
@@ -93,10 +97,8 @@ fn main() {
                 _ => (),
             },
             winit::event::Event::DeviceEvent { event, .. } => match event {
-                winit::event::DeviceEvent::MouseMotion { .. } => {
-                    /*f !mouse_visible {
-                        window.set_cursor_position(window.cu)
-                    }*/
+                winit::event::DeviceEvent::MouseMotion { delta } => {
+                    camera.rotate(delta);
                 }
                 _ => (),
             },
@@ -109,15 +111,14 @@ fn main() {
 
                 let mut model = Matrix4::identity();
                 model.scale(0.4, 0.4, 0.4);
-                model.translate(0.0, -0.5, 3.5);
+                model.translate(0.0, -0.5 + f32::sin(time) * 0.3, 3.5);
                 model.rotate_x(-0.4);
                 model.rotate_y(time);
                 model.rotate_z(0.2);
 
                 let projection = Matrix4::perspective(size.width, size.height, 0.1, 1024.0);
 
-                let view =
-                    transformation::view(&[0.0, f32::sin(time) * 0.3, 0.0], &[0.0, 0.0, 1.0]);
+                let view = transformation::view(&camera.position, &camera.direction);
 
                 let uniforms = uniform! {
                     modelMatrix: model.to_array(),
