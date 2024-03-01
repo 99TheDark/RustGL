@@ -96,6 +96,7 @@ impl ops::Mul<Matrix4> for Matrix4 {
 
     fn mul(self, rhs: Matrix4) -> Self::Output {
         let (a, b) = (self.0, rhs.0);
+
         Matrix4([
             [
                 a[0][0] * b[0][0] + a[1][0] * b[0][1] + a[2][0] * b[0][2] + a[3][0] * b[0][3],
@@ -122,6 +123,20 @@ impl ops::Mul<Matrix4> for Matrix4 {
                 a[0][3] * b[3][0] + a[1][3] * b[3][1] + a[2][3] * b[3][2] + a[3][3] * b[3][3],
             ],
         ])
+    }
+}
+
+impl ops::Mul<[f32; 3]> for Matrix4 {
+    type Output = [f32; 3];
+
+    fn mul(self, rhs: [f32; 3]) -> Self::Output {
+        let (a, b) = (self.0, rhs);
+
+        [
+            a[0][0] * b[0] + a[1][0] * b[1] + a[2][0] * b[2] + a[3][0],
+            a[0][1] * b[0] + a[1][1] * b[1] + a[2][1] * b[2] + a[3][1],
+            a[0][2] * b[0] + a[1][2] * b[1] + a[2][2] * b[2] + a[3][2],
+        ]
     }
 }
 
