@@ -12,8 +12,8 @@ impl Camera {
         let (dx, dy) = (delta.0 as f32, delta.1 as f32);
 
         let mut matrix = Matrix4::identity();
-        matrix.rotate_x(dy * CAMERA_SPEED);
-        matrix.rotate_y(dx * CAMERA_SPEED);
+        matrix.rotate_x(dx * CAMERA_SPEED);
+        matrix.rotate_y(dy * CAMERA_SPEED);
 
         self.direction = matrix * self.direction;
     }

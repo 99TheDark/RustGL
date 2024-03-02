@@ -4,3 +4,5 @@
 - Fix indices
 - Movement controls
 - Fix aspect ratio on rescale
+- Specular highlights
+- Better shading
