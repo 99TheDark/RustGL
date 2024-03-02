@@ -1,11 +1,17 @@
 mod camera;
+mod keyboard;
 mod model;
 mod transformation;
+mod utils;
 
 use camera::Camera;
 use glium::Surface;
+use keyboard::Keyboard;
 use std::fs;
 use transformation::Matrix4;
+use winit::keyboard::KeyCode;
+
+use crate::utils::b2f;
 
 #[macro_use]
 extern crate glium;
@@ -61,6 +67,7 @@ fn main() {
 
     let mut time = 0.0;
     let mut camera = Camera::new();
+    let mut keyboard = Keyboard::new();
 
     let _ = event_loop.run(move |event, window_target| {
         match event {
@@ -84,16 +91,20 @@ fn main() {
                     device_id: _,
                     event,
                     ..
-                } => {
-                    if event.state == winit::event::ElementState::Pressed
-                        && event.physical_key == winit::keyboard::KeyCode::Escape
-                    {
-                        window.set_cursor_visible(true);
-                        window
-                            .set_cursor_grab(winit::window::CursorGrabMode::None)
-                            .unwrap();
+                } => match event.state {
+                    winit::event::ElementState::Pressed => match event.physical_key {
+                        winit::keyboard::PhysicalKey::Code(KeyCode::Escape) => {
+                            window.set_cursor_visible(true);
+                            window
+                                .set_cursor_grab(winit::window::CursorGrabMode::None)
+                                .unwrap();
+                        }
+                        _ => keyboard.press(event.physical_key),
+                    },
+                    winit::event::ElementState::Released => {
+                        keyboard.release(event.physical_key);
                     }
-                }
+                },
                 _ => (),
             },
             winit::event::Event::DeviceEvent { event, .. } => match event {
@@ -108,6 +119,14 @@ fn main() {
 
                 // Aspect ratio
                 let size = window.inner_size();
+
+                if keyboard.any_key_down() {
+                    let x = b2f(keyboard.down(KeyCode::KeyD)) - b2f(keyboard.down(KeyCode::KeyA));
+                    let y = b2f(keyboard.down(KeyCode::KeyE)) - b2f(keyboard.down(KeyCode::KeyQ));
+                    let z = b2f(keyboard.down(KeyCode::KeyW)) - b2f(keyboard.down(KeyCode::KeyS));
+
+                    camera.step(x, y, z);
+                }
 
                 let mut model = Matrix4::identity();
                 model.scale(0.4, 0.4, 0.4);
