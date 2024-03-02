@@ -5,4 +5,4 @@
 - Fix aspect ratio on rescale
 - Specular highlights
 - Better shading
-- Fix direction being inverted when facing the wrong way
+- Fix direction being inverted vertically when facing the wrong way
